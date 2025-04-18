@@ -11,10 +11,9 @@ spec:
     path: simple-workflow  # Path to the folder containing your YAML
   destination:
     server: https://kubernetes.default.svc
-    namespace: argo-workflows  # Namespace where Argo Workflows is installed
   syncPolicy:
     automated:  # Optional: enable auto-sync
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    # syncOptions:
+    #   - CreateNamespace=true
