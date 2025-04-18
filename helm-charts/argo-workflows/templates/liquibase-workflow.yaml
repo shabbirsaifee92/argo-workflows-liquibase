@@ -21,11 +21,11 @@ spec:
             parameters:
               - name: message
                 value: "✅ Verification passed"
-          when: "'{{steps.verify-e2e.outputs.parameters.test-status}}' == 'passed'"
+          when: "'{{ "{{" }}steps.verify-e2e.outputs.parameters.test-status{{ "}}" }}' == 'passed'"
         
         - name: handle-failure
           template: handle-failure
-          when: "'{{steps.verify-e2e.outputs.parameters.test-status}}' == 'failed'"
+          when: "'{{ "{{" }}steps.verify-e2e.outputs.parameters.test-status{{ "}}" }}' == 'failed'"
 
     - name: handle-failure
       steps:
@@ -88,6 +88,6 @@ spec:
         command: [sh, -c]
         args:
           - |
-            echo "{{inputs.parameters.message}}"
+            echo "{{ "{{" }}inputs.parameters.message{{ "}}" }}"
             # Always exit with 0
             exit 0

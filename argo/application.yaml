@@ -8,7 +8,9 @@ spec:
   source:
     repoURL: https://github.com/shabbirsaifee92/argo-workflows-liquibase.git
     targetRevision: HEAD
-    path: simple-workflow  # Path to the folder containing your YAML
+    path: helm-charts/argo-workflows
+    helm:
+      releaseName: liquibase-workflow
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
