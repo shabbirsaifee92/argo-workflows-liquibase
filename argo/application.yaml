@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: liquibase-workflow-app
+  namespace: argocd  # This should match the namespace where Argo CD is installed
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/shabbirsaifee92/argo-workflows-liquibase.git
+    targetRevision: HEAD
+    path: simple-workflow  # Path to the folder containing your YAML
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo-workflows  # Namespace where Argo Workflows is installed
+  syncPolicy:
+    automated:  # Optional: enable auto-sync
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
