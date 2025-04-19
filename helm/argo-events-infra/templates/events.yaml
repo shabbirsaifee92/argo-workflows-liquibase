@@ -48,8 +48,6 @@ spec:
               metadata:
                 generateName: liquibase-pipeline-
                 namespace: {{ .Values.namespace }}
-                labels:
-                  app: "{{ "{{" }}dependency.labels.app{{ "}}" }}"
               spec:
                 workflowTemplateRef:
                   name: {{ .Values.workflowTemplate.name }}
@@ -58,20 +56,20 @@ spec:
                   - name: liquibase-image
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ "{{" }}dependency.name{{ "}}" }}"
+                        name: "\{\{ dependency.name \}\}"
                         key: liquibase-image
                   - name: database-url
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ "{{" }}dependency.name{{ "}}" }}"
+                        name: "\{\{ dependency.name \}\}"
                         key: database-url
                   - name: changelog-file
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ "{{" }}dependency.name{{ "}}" }}"
+                        name: "\{\{ dependency.name \}\}"
                         key: changelog-file
                   - name: context
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ "{{" }}dependency.name{{ "}}" }}"
+                        name: "\{\{ dependency.name \}\}"
                         key: context
