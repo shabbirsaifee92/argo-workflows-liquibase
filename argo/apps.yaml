@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/shabbirsaifee92/liquibase-workflow.git
+    repoURL: https://github.com/shabbirsaifee92/argo-workflows-liquibase.git
     targetRevision: HEAD
     path: helm/argo-events-infra
   destination:
@@ -27,7 +27,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/shabbirsaifee92/liquibase-workflow.git
+    repoURL: https://github.com/shabbirsaifee92/argo-workflows-liquibase.git
     targetRevision: HEAD
     path: helm/liquibase-workflow
   destination:
@@ -54,7 +54,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/shabbirsaifee92/liquibase-workflow.git
+    repoURL: https://github.com/shabbirsaifee92/argo-workflows-liquibase.git
     targetRevision: HEAD
     path: helm/app-database
     helm:
