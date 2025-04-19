@@ -23,6 +23,7 @@ spec:
             value: "db-config"
 ---
 # Sensor for triggering workflows
+# Sensor for triggering workflows
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
@@ -41,6 +42,14 @@ spec:
         name: workflow-trigger
         k8s:
           operation: create
+          parameters:
+            - src:
+                dependencyName: config-updated
+                dataKey: body.metadata.name
+              dest: spec.arguments.parameters.0.valueFrom.configMapKeyRef.name
+              dest: spec.arguments.parameters.1.valueFrom.configMapKeyRef.name
+              dest: spec.arguments.parameters.2.valueFrom.configMapKeyRef.name
+              dest: spec.arguments.parameters.3.valueFrom.configMapKeyRef.name
           source:
             resource:
               apiVersion: argoproj.io/v1alpha1
@@ -56,20 +65,20 @@ spec:
                   - name: liquibase-image
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ `{{ .Input.events.config-updated.data.body.metadata.name }}` }}"
+                        name: placeholder
                         key: liquibase-image
                   - name: database-url
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ `{{ .Input.events.config-updated.data.body.metadata.name }}` }}"
+                        name: placeholder
                         key: database-url
                   - name: changelog-file
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ `{{ .Input.events.config-updated.data.body.metadata.name }}` }}"
+                        name: placeholder
                         key: changelog-file
                   - name: context
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ `{{ .Input.events.config-updated.data.body.metadata.name }}` }}"
+                        name: placeholder
                         key: context
