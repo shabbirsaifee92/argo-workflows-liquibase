@@ -56,20 +56,20 @@ spec:
                   - name: liquibase-image
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ "{{" }}"{{ .Input.events.config-updated.data.body.metadata.name }}"{{ "}}" }}"
+                        name: "{{ `{{ .Input.events.config-updated.data.body.metadata.name }}` }}"
                         key: liquibase-image
                   - name: database-url
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ "{{" }}"{{ .Input.events.config-updated.data.body.metadata.name }}"{{ "}}" }}"
+                        name: "{{ `{{ .Input.events.config-updated.data.body.metadata.name }}` }}"
                         key: database-url
                   - name: changelog-file
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ "{{" }}"{{ .Input.events.config-updated.data.body.metadata.name }}"{{ "}}" }}"
+                        name: "{{ `{{ .Input.events.config-updated.data.body.metadata.name }}` }}"
                         key: changelog-file
                   - name: context
                     valueFrom:
                       configMapKeyRef:
-                        name: "{{ "{{" }}"{{ .Input.events.config-updated.data.body.metadata.name }}"{{ "}}" }}"
-                        key: context                        
+                        name: "{{ `{{ .Input.events.config-updated.data.body.metadata.name }}` }}"
+                        key: context
