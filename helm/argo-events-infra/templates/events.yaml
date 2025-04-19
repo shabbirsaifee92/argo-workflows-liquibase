@@ -29,7 +29,8 @@ metadata:
   name: {{ .Values.sensor.name }}
   namespace: {{ .Values.namespace }}
 spec:
-  serviceAccountName: {{ .Values.serviceAccount.name }}
+  template:
+    serviceAccountName: {{ .Values.serviceAccount.name }}
   eventBusName: {{ .Values.eventBus.name }}
   dependencies:
     - name: config-updated
