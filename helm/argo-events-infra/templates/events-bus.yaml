@@ -1,0 +1,11 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  name: {{ .Values.eventBus.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  nats:
+    native:
+      replicas: {{ .Values.eventBus.replicas }}
+      auth: token

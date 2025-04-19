@@ -6,6 +6,14 @@ Install argocd
         --set server.extraArgs={--insecure} \
         --set server.config."users\.anonymous\.enabled"="true"
     ```
+
+Install argo events
+    ```
+    helm install argo-events argo/argo-events \
+    --namespace argo-events \
+    --create-namespace
+    ```
+
 Install argo workflows
     ```
     helm repo add argo https://argoproj.github.io/argo-helm

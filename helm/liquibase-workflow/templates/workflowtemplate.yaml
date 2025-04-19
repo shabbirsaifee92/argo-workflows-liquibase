@@ -1,0 +1,146 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: {{ .Values.workflowTemplateName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  entrypoint: liquibase-pipeline
+  serviceAccountName: {{ .Values.serviceAccountName }}
+  arguments:
+    parameters:
+    - name: liquibase-image
+      description: "The liquibase container image to use"
+    - name: database-url
+      description: "Database connection URL"
+    - name: changelog-file
+      description: "Path to the changelog file"
+      default: "changelog.xml"
+    - name: context
+      description: "Application context identifier"
+      
+  templates:
+    - name: liquibase-pipeline
+      steps:
+      - - name: liquibase-update
+          template: liquibase-update
+          arguments:
+            parameters:
+            - name: liquibase-image
+              value: "{{ "{{" }}workflow.parameters.liquibase-image{{ "}}" }}"
+            - name: database-url
+              value: "{{ "{{" }}workflow.parameters.database-url{{ "}}" }}"
+            - name: changelog-file
+              value: "{{ "{{" }}workflow.parameters.changelog-file{{ "}}" }}"
+          
+      - - name: verify-e2e
+          template: verify-e2e
+          arguments:
+            parameters:
+            - name: context
+              value: "{{ "{{" }}workflow.parameters.context{{ "}}" }}"
+          
+      - - name: notify-success
+          template: notify
+          arguments:
+            parameters:
+              - name: message
+                value: "✅ Verification passed for {{ "{{" }}workflow.parameters.context{{ "}}" }}"
+          when: "'{{ "{{" }}steps.verify-e2e.outputs.parameters.test-status{{ "}}" }}' == 'passed'"
+        
+        - name: handle-failure
+          template: handle-failure
+          when: "'{{ "{{" }}steps.verify-e2e.outputs.parameters.test-status{{ "}}" }}' == 'failed'"
+          arguments:
+            parameters:
+            - name: database-url
+              value: "{{ "{{" }}workflow.parameters.database-url{{ "}}" }}"
+            - name: liquibase-image
+              value: "{{ "{{" }}workflow.parameters.liquibase-image{{ "}}" }}"
+
+    - name: handle-failure
+      inputs:
+        parameters:
+        - name: database-url
+        - name: liquibase-image
+      steps:
+      - - name: notify-failure
+          template: notify
+          arguments:
+            parameters:
+              - name: message
+                value: "❌ Verification failed for {{ "{{" }}workflow.parameters.context{{ "}}" }}, initiating rollback"
+                
+      - - name: liquibase-rollback
+          template: liquibase-rollback
+          arguments:
+            parameters:
+            - name: database-url
+              value: "{{ "{{" }}inputs.parameters.database-url{{ "}}" }}"
+            - name: liquibase-image
+              value: "{{ "{{" }}inputs.parameters.liquibase-image{{ "}}" }}"
+
+    - name: liquibase-update
+      inputs:
+        parameters:
+        - name: liquibase-image
+        - name: database-url
+        - name: changelog-file
+      container:
+        image: "{{ "{{" }}inputs.parameters.liquibase-image{{ "}}" }}"
+        command: [sh, -c]
+        args:
+          - |
+            echo "Running Liquibase update on {{ "{{" }}inputs.parameters.database-url{{ "}}" }}"
+            echo "Using changelog file: {{ "{{" }}inputs.parameters.changelog-file{{ "}}" }}"
+            # Real command would be something like:
+            # liquibase --url="{{ "{{" }}inputs.parameters.database-url{{ "}}" }}" update --changelog-file={{ "{{" }}inputs.parameters.changelog-file{{ "}}" }}
+            exit 0
+
+    - name: verify-e2e
+      inputs:
+        parameters:
+        - name: context
+      container:
+        image: alpine
+        command: [sh, -c]
+        args:
+          - |
+            echo "Running e2e tests for context: {{ "{{" }}inputs.parameters.context{{ "}}" }}"
+            if [ $((RANDOM % 2)) -eq 0 ]; then
+              echo "passed" > /tmp/test-status.txt
+            else
+              echo "failed" > /tmp/test-status.txt
+            fi
+            exit 0
+      outputs:
+        parameters:
+          - name: test-status
+            valueFrom:
+              path: /tmp/test-status.txt
+
+    - name: liquibase-rollback
+      inputs:
+        parameters:
+        - name: liquibase-image
+        - name: database-url
+      container:
+        image: "{{ "{{" }}inputs.parameters.liquibase-image{{ "}}" }}"
+        command: [sh, -c]
+        args:
+          - |
+            echo "Running Liquibase rollback on {{ "{{" }}inputs.parameters.database-url{{ "}}" }}"
+            # Real command would be something like:
+            # liquibase --url="{{ "{{" }}inputs.parameters.database-url{{ "}}" }}" rollbackCount 1
+            exit 0
+
+    - name: notify
+      inputs:
+        parameters:
+          - name: message
+      container:
+        image: alpine
+        command: [sh, -c]
+        args:
+          - |
+            echo "{{ "{{" }}inputs.parameters.message{{ "}}" }}"
+            exit 0

@@ -1,0 +1,21 @@
+# Infrastructure configuration
+namespace: default
+
+# EventBus configuration
+eventBus:
+  name: default
+  replicas: 3
+
+# Service account and RBAC
+serviceAccount:
+  name: argo-events-sa
+
+# Event components
+eventSource:
+  name: db-config-watcher
+sensor:
+  name: db-workflow-trigger
+
+# Common workflow template reference
+workflowTemplate:
+  name: liquibase-pipeline

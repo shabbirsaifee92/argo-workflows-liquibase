@@ -1,0 +1,10 @@
+# Basic app configuration
+namespace: default
+appName: myapp  # This will be used in ConfigMap name and labels
+
+# Database configuration - teams would modify these values
+database:
+  liquibaseImage: "liquibase/liquibase:4.20"
+  url: "jdbc:postgresql://myapp-db:5432/myapp"
+  changelog: "db/changelog/myapp/changelog.xml"
+  context: "myapp"

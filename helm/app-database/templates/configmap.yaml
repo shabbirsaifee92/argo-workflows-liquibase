@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appName }}-db-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.appName }}
+    type: db-config
+data:
+  liquibase-image: {{ .Values.database.liquibaseImage }}
+  database-url: {{ .Values.database.url }}
+  changelog-file: {{ .Values.database.changelog }}
+  context: {{ .Values.database.context }}

@@ -1,0 +1,73 @@
+# EventSource for watching ConfigMap changes
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: {{ .Values.eventSource.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceAccountName: {{ .Values.serviceAccount.name }}
+  eventBusName: {{ .Values.eventBus.name }}
+  resource:
+    configmap-watcher:
+      namespace: {{ .Values.namespace }}
+      group: ""
+      version: v1
+      resource: configmaps
+      eventTypes:
+        - UPDATE
+      filter:
+        labels:
+          type: db-config
+---
+# Sensor for triggering workflows
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: {{ .Values.sensor.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceAccountName: {{ .Values.serviceAccount.name }}
+  eventBusName: {{ .Values.eventBus.name }}
+  dependencies:
+    - name: config-updated
+      eventSourceName: {{ .Values.eventSource.name }}
+      eventName: configmap-watcher
+  triggers:
+    - template:
+        name: workflow-trigger
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: liquibase-pipeline-
+                namespace: {{ .Values.namespace }}
+                labels:
+                  app: "{{ "{{" }}dependency.labels.app{{ "}}" }}"
+              spec:
+                workflowTemplateRef:
+                  name: {{ .Values.workflowTemplate.name }}
+                arguments:
+                  parameters:
+                  - name: liquibase-image
+                    valueFrom:
+                      configMapKeyRef:
+                        name: "{{ "{{" }}dependency.name{{ "}}" }}"
+                        key: liquibase-image
+                  - name: database-url
+                    valueFrom:
+                      configMapKeyRef:
+                        name: "{{ "{{" }}dependency.name{{ "}}" }}"
+                        key: database-url
+                  - name: changelog-file
+                    valueFrom:
+                      configMapKeyRef:
+                        name: "{{ "{{" }}dependency.name{{ "}}" }}"
+                        key: changelog-file
+                  - name: context
+                    valueFrom:
+                      configMapKeyRef:
+                        name: "{{ "{{" }}dependency.name{{ "}}" }}"
+                        key: context

@@ -1,0 +1,4 @@
+# Basic workflow template configuration
+namespace: default
+workflowTemplateName: liquibase-pipeline
+serviceAccountName: argo-workflow
