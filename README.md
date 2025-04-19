@@ -32,8 +32,31 @@
     --set installCRDs=true
     ```
 
+1. Access argo workflows UI
+    ```
+    kubectl -n argo-workflows port-forward service/argo-workflows-server 2746:2746
+    ```
+
+1. Access argocd UI
+    ```
+    kubectl port-forward -n argocd svc/argocd-server 80:8080
+    ```
+
+1. Go to github and create a PAT to connect argocd
+
+1. Add a new repository in argocd ui
+
+1. Deploy the argocd apps
+    ```
+    kubectl apply -f argo/apps.yaml
+    ```
+
+1. To test the workflow, update the image in helm/app-database/values.yaml and push to github
+
 ## Example workflow
 
 ![alt text](<Screenshot 2025-04-17 at 2.03.12 AM.png>)
 
 ![alt text](<Screenshot 2025-04-17 at 2.04.10 AM.png>)
+
+
