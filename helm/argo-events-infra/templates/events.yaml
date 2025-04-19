@@ -65,20 +65,20 @@ spec:
                   - name: liquibase-image
                     valueFrom:
                       configMapKeyRef:
-                        name: placeholder
+                        name: myapp-db-config
                         key: liquibase-image
                   - name: database-url
                     valueFrom:
                       configMapKeyRef:
-                        name: placeholder
+                        name: myapp-db-config
                         key: database-url
                   - name: changelog-file
                     valueFrom:
                       configMapKeyRef:
-                        name: placeholder
+                        name: myapp-db-config
                         key: changelog-file
                   - name: context
                     valueFrom:
                       configMapKeyRef:
-                        name: placeholder
+                        name: myapp-db-config
                         key: context
