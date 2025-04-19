@@ -17,7 +17,9 @@ spec:
         - UPDATE
       filter:
         labels:
-          type: db-config
+          - key: "type"
+            operation: "=="
+            value: "db-config"
 ---
 # Sensor for triggering workflows
 apiVersion: argoproj.io/v1alpha1
