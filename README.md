@@ -1,4 +1,4 @@
-Install argocd
+1. Install argocd
     ```
     helm install argocd argo/argo-cd \
         --namespace argocd \
@@ -7,21 +7,24 @@ Install argocd
         --set server.config."users\.anonymous\.enabled"="true"
     ```
 
-Install argo events
+1. Install argo events
     ```
     helm install argo-events argo/argo-events \
     --namespace argo-events \
     --create-namespace
     ```
 
-Install argo workflows
+1. Install argo workflows
     ```
     helm repo add argo https://argoproj.github.io/argo-helm
 
-    helm install argo-workflows  argo/argo-workflows -n argo-workflows --create-namespace
+    helm install argo-workflows argo/argo-workflows \
+    -n argo-workflows \
+    --create-namespace \
+    -f values.yaml
     ```
 
-Install rollotus (to use analysis templates)
+1. Install rollotus (to use analysis templates)
     ```
     helm install argo-rollouts argo/argo-rollouts \
     --namespace argo-rollouts \
