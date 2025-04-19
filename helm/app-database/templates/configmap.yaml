@@ -6,6 +6,7 @@ metadata:
   labels:
     app: {{ .Values.appName }}
     type: db-config
+    workflows.argoproj.io/configmap-type: Parameter
 data:
   liquibase-image: {{ .Values.database.liquibaseImage }}
   database-url: {{ .Values.database.url }}
