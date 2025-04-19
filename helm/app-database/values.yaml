@@ -4,7 +4,7 @@ appName: myapp  # This will be used in ConfigMap name and labels
 
 # Database configuration - teams would modify these values
 database:
-  liquibaseImage: "alpine:3.18"
+  liquibaseImage: "alpine:3.20"
   url: "jdbc:postgresql://myapp-db:5432/myapp"
   changelog: "db/changelog/myapp/changelog.xml"
   context: "myapp"
